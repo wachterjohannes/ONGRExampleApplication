@@ -1,9 +1,15 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/service_container.html
-parameters:
-#    parameter_name: value
-
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    app.item_repository:
+        class: AppBundle\Infrastructure\ItemRepository
+        factory: 'doctrine.orm.entity_manager:getRepository'
+        arguments: ['AppBundle:Item']
+
+    app.item_manager:
+        class: AppBundle\Item\ItemManager
+        arguments: ['@app.item_repository']
+
+    app.flush_subscriber:
+        class: AppBundle\Infrastructure\FlushSubscriber
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - {name:'kernel.event_listener', event: 'kernel.response', method: 'onKernelResponse'}
