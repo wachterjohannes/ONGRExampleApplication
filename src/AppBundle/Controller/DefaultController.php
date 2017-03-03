@@ -16,17 +16,17 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $repository = $this->get('app.item_repository');
-
         $page = $request->get('page', 1);
         $filter = $request->query->get('filter');
-        $query = $request->query->get('q');
+        $query = $request->get('q');
+
+        $items = $this->get('app.item_indexer')->findItems($page, self::PAGE_SIZE, $query, $filter);
 
         return $this->render(
             'default/index.html.twig',
             [
-                'items' => $repository->findItems($page, self::PAGE_SIZE, $query, $filter),
-                'pages' => ceil($repository->count($query, $filter) / self::PAGE_SIZE) ?: 1,
+                'items' => $items,
+                'pages' => ceil($items->count() / self::PAGE_SIZE) ?: 1,
                 'page' => $page,
                 'q' => $query,
             ]
