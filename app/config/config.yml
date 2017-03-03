@@ -70,9 +70,42 @@ swiftmailer:
     spool:     { type: memory }
 
 ongr_elasticsearch:
+    analysis:
+        filter:
+            german_stop:
+                type: stop
+                stopwords: _german_
+            german_stemmer:
+                type: stemmer
+                language: light_german
+            edgeNGram:
+                type: edgeNGram
+                min_gram: 4
+                max_gram: 32
+                token_chars:
+                    - letter
+                    - digit
+        analyzer:
+            default:
+                tokenizer: standard
+                filter:
+                    - lowercase
+                    - german_stop
+                    - german_normalization
+                    - german_stemmer
+                    - edgeNGram
+    connections:
+        default:
+            index_name: ongr_example
+            analysis:
+                filter:
+                    - german_stop
+                    - german_stemmer
+                    - edgeNGram
+                analyzer:
+                    - default
     managers:
         default:
-            index:
-                index_name: ongr_example
+            connection: default
             mappings:
                 - AppBundle

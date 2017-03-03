@@ -51,7 +51,7 @@ class ItemIndexer implements ItemIndexerInterface
     {
         $query = new MatchAllQuery();
         if ($queryString) {
-            $query = new MatchQuery('title', $queryString);
+            $query = new MatchQuery('title', $queryString, ['fuzziness' => 'AUTO']);
         }
 
         $search = new Search();
