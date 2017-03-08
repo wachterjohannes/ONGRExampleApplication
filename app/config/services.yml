@@ -4,12 +4,16 @@ services:
         factory: 'doctrine.orm.entity_manager:getRepository'
         arguments: ['AppBundle:Item']
 
+    app.item_indexer:
+        class: AppBundle\Infrastructure\ItemIndexer
+        arguments: ['@es.manager.default']
+
     app.item_manager:
         class: AppBundle\Item\ItemManager
-        arguments: ['@app.item_repository']
+        arguments: ['@app.item_repository', '@app.item_indexer']
 
     app.flush_subscriber:
         class: AppBundle\Infrastructure\FlushSubscriber
-        arguments: ['@doctrine.orm.entity_manager']
+        arguments: ['@doctrine.orm.entity_manager', '@app.item_indexer']
         tags:
             - {name:'kernel.event_listener', event: 'kernel.response', method: 'onKernelResponse'}

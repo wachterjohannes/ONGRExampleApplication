@@ -12,15 +12,23 @@ class FlushSubscriber
     private $entityManager;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @var ItemIndexer
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    private $itemIndexer;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param ItemIndexer $itemIndexer
+     */
+    public function __construct(EntityManagerInterface $entityManager, ItemIndexer $itemIndexer)
     {
         $this->entityManager = $entityManager;
+        $this->itemIndexer = $itemIndexer;
     }
 
     public function onKernelResponse()
     {
         $this->entityManager->flush();
+        $this->itemIndexer->flush();
     }
 }
