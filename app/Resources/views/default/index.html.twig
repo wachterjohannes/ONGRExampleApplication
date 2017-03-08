@@ -4,8 +4,19 @@
     {# source of data https://de.wikiquote.org/wiki/Deutsche_Sprichw%C3%B6rter #}
 
     <div class="row">
-        <div class="col-md-offset-9 col-lg-3">
-            <form action="{{ path('list') }}" method="get">
+        <div class="col-md-offset-8 col-lg-4">
+            <form action="{{ path('list') }}" method="get" class="form-inline">
+                <div class="input-group">
+                    <select class="form-control" name="filter" id="filter">
+                        <option value="">Select ...</option>
+                        {% for letter in 'a'..'z' %}
+                            <option value="{{ letter }}" {{ app.request.get('filter') == letter ? 'selected' : '' }}>
+                                {{ letter|upper }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Search for..." name="q" value="{{ q|default('') }}"/>
                     <span class="input-group-btn">

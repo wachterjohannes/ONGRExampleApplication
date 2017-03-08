@@ -18,13 +18,17 @@ class DefaultController extends Controller
     {
         $repository = $this->get('app.item_repository');
 
+        $page = $request->get('page', 1);
+        $filter = $request->query->get('filter');
+        $query = $request->query->get('q');
+
         return $this->render(
             'default/index.html.twig',
             [
-                'items' => $repository->findItems($request->get('page', 1), self::PAGE_SIZE, $request->get('q')),
-                'pages' => ceil($repository->count($request->get('q')) / self::PAGE_SIZE) ?: 1,
-                'page' => $request->get('page', 1),
-                'q' => $request->get('q'),
+                'items' => $repository->findItems($page, self::PAGE_SIZE, $query, $filter),
+                'pages' => ceil($repository->count($query, $filter) / self::PAGE_SIZE) ?: 1,
+                'page' => $page,
+                'q' => $query,
             ]
         );
     }
